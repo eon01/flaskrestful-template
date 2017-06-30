@@ -7,6 +7,9 @@ from flask_restful import Resource, Api, reqparse
 
 from config import config
 
+# create the log folder
+os.makedirs("logs", exist_ok=True)
+
 # app information
 app = Flask(__name__)
 
