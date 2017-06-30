@@ -5,6 +5,8 @@ import logging, traceback, configparser, os
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
 
+from config import config
+
 # app information
 app = Flask(__name__)
 
@@ -14,8 +16,7 @@ api.prefix = "/v1"
 
 
 # start configuration parser
-parser = configparser.ConfigParser()
-parser.read("app.conf")
+parser = config.get_config()
 
 # reading variables
 logger_level = parser.get('logging', 'logger_level', raw = True)
@@ -53,6 +54,7 @@ class HelloWorld(Resource):
         args = parser.parse_args()
         
         arg = args['arg']
+        logger.info("test")
         return {'parameter': parameter, 'arg': arg }
         
 
@@ -63,7 +65,7 @@ api.add_resource(HelloWorld, '/<string:parameter>')
 if __name__ == '__main__':
     # Bind to PORT if defined, otherwise default to 5000.
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=True)
     # To test this, run flask app and ``` curl  http://0.0.0.0:5000/v1/myparameter -d "arg=myarg" -X POST ```
     
     
